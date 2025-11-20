@@ -14,6 +14,7 @@ This flake provides Google Antigravity for NixOS systems with:
 - **FHS environment**: Standard Linux filesystem layout via `buildFHSEnv`
 - **Multi-platform support**: Linux (x86_64, aarch64) and macOS (x86_64, aarch64)
 - **Chrome integration**: Bundled wrapper for system Chrome with user profile support
+- **Chromium fallback**: Automatically uses Chromium on `aarch64-linux` where Google Chrome isn't available
 - **Version pinning**: Tagged releases for reproducible builds
 - **Zero configuration**: All dependencies included
 
@@ -167,6 +168,9 @@ Creates a Chrome wrapper that:
 
 - NixOS or Nix package manager with flakes enabled
 - `allowUnfree = true` in Nix configuration (Antigravity is proprietary software)
+- System browser:
+  - `x86_64-linux`: `google-chrome-stable`
+  - `aarch64-linux`: `chromium`
 
 ### Enabling Unfree Packages
 
