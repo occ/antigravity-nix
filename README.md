@@ -1,29 +1,41 @@
 # antigravity-nix
 
-> Auto-updating Nix Flake for [Google Antigravity](https://antigravity.google) - Next-generation agentic IDE
+> Auto-updating Nix Flake for [Google Antigravity](https://antigravity.google) - The AI-Native IDE for Autonomous Development
 
 [![Update Antigravity](https://github.com/jacopone/antigravity-nix/actions/workflows/update.yml/badge.svg)](https://github.com/jacopone/antigravity-nix/actions/workflows/update.yml)
+[![Flake Check](https://img.shields.io/badge/flake-check%20passing-success)](https://github.com/jacopone/antigravity-nix)
+[![NixOS](https://img.shields.io/badge/NixOS-ready-blue?logo=nixos)](https://nixos.org)
 
-## Features
+## ✨ Features
 
-- 🤖 **Agentic Development**: Next-generation AI-powered IDE with autonomous coding capabilities
-- 🚀 **Auto-updating**: Checks for new releases 3x weekly via GitHub Actions
-- 📦 **Multi-platform**: Supports Linux (x86_64, aarch64) and macOS (x86_64, aarch64)
-- ⚡ **Fast**: New versions available within 48 hours of official release
-- 🔐 **Reliable**: Automatic hash verification and build testing
-- 🤖 **Automated PRs**: Creates and auto-merges PRs when tests pass
-- 🔧 **FHS Environment**: Maximum compatibility with binary distributions
-- 🎨 **Overlay Support**: Seamless integration with NixOS and Home Manager
+- 🧠 **True AI Agents**: Multi-file reasoning, architectural planning, and autonomous execution
+- 🚀 **Smart Auto-Updates**: Browser-based version detection with zero manual intervention
+- 🎯 **NixOS Optimized**: FHS environment with system Chrome integration
+- 📦 **Multi-Platform**: Linux (x86_64, aarch64) and macOS (x86_64, aarch64)
+- ⚡ **Lightning Fast**: New versions within 48 hours, auto-merge when tests pass
+- 🔐 **Production Ready**: Automated hash verification and comprehensive build testing
+- 🎨 **Seamless Integration**: First-class NixOS and Home Manager support with overlays
 
-## 🎯 Why Google Antigravity?
+## 🎯 Antigravity vs Traditional AI IDEs
 
-Google Antigravity represents the next evolution in AI-assisted development, moving beyond code completion to true **agentic programming**. Unlike traditional IDEs with AI assistants, Antigravity's agents can:
+Google Antigravity represents a paradigm shift from AI **assistants** to AI **agents**. While tools like Cursor provide intelligent code completion and chat interfaces, Antigravity operates as an autonomous development partner:
 
-- **Understand entire codebases** and make holistic architectural decisions
-- **Execute multi-step refactorings** autonomously across multiple files
-- **Design and implement features** from natural language descriptions
-- **Debug complex issues** by analyzing logs, traces, and system behavior
-- **Learn your coding patterns** and adapt to your team's conventions
+### **Antigravity (Agentic)**
+- 🧠 **Autonomous Reasoning**: Agents independently analyze codebases, plan multi-step changes, and execute complex refactorings
+- 🏗️ **Architectural Intelligence**: Understands system design, makes holistic decisions across modules
+- 🔄 **Self-Directed Execution**: Can implement entire features from natural language specifications
+- 🐛 **Intelligent Debugging**: Analyzes logs, traces, and system behavior to root-cause issues
+- 📚 **Adaptive Learning**: Learns your team's patterns, conventions, and architectural preferences
+- 🎯 **Goal-Oriented**: Given high-level objectives, breaks them into tasks and executes autonomously
+
+### **Traditional AI IDEs (Assistant-Based)**
+- 💬 Chat-based code suggestions and explanations
+- ⌨️ Context-aware autocomplete and inline generation
+- 🔍 File-by-file code understanding
+- ❓ Requires explicit prompts and guidance for each step
+- 📝 Primarily focused on writing code snippets
+
+**Think of it this way**: Traditional AI IDEs are like a smart autocomplete that can write functions. Antigravity is like having a senior developer who can architect, implement, and debug entire features while you focus on product direction.
 
 ### The NixOS Challenge
 
@@ -164,15 +176,31 @@ nix flake update antigravity-nix
 sudo nixos-rebuild switch --flake .
 ```
 
-## How It Works
+## 🔧 How It Works
 
-1. **3x weekly checks**: GitHub Actions runs Monday, Wednesday, Friday at 9:00 UTC
-2. **Version detection**: Scrapes the official download page for latest version
-3. **Multi-platform support**: Downloads and verifies hashes for all supported platforms
-4. **Automated testing**: Builds the package and runs flake checks
-5. **Pull requests**: Creates PR with updates, auto-merges if tests pass
-6. **Release tagging**: Automatically creates GitHub releases for version tracking
-7. **FHS isolation**: Provides standard Linux environment within Nix's purity model
+This flake implements a sophisticated auto-update system with browser automation:
+
+1. **🕐 3x Weekly Checks**: GitHub Actions runs Monday, Wednesday, Friday at 9:00 UTC
+2. **🌐 Smart Version Detection**:
+   - Uses Playwright with system Chrome for JavaScript-rendered page scraping
+   - NixOS-optimized with automatic Chrome path detection (`/run/current-system/sw/bin/google-chrome-stable`)
+   - Separates logs (stderr) from version output (stdout) for clean parsing
+3. **🔒 Cryptographic Verification**: Downloads and verifies SHA256 hashes for all platforms
+4. **✅ Automated Testing**: Builds package and runs comprehensive flake checks
+5. **🔄 Intelligent PR Management**: Creates PRs with detailed changelogs, auto-merges when tests pass
+6. **🏷️ Release Tagging**: Automatically creates GitHub releases for version pinning
+7. **🐚 FHS Isolation**: Provides standard Linux environment within Nix's purity model
+8. **🔗 Chrome Integration**: Bundles Chrome wrapper for Antigravity's browser automation features
+
+### Recent Improvements
+
+**✨ November 2025 Update**: Complete rewrite of version detection system
+- **Fixed browser scraping** to properly separate logs from version output
+- **Added NixOS system Chrome integration** with automatic path detection
+- **Improved error handling** and workflow reliability
+- **Added comprehensive documentation** (CLAUDE.md) for contributors
+- **Zero false positives** on version checks
+- **Enhanced automation** with npm-based Playwright dependency management
 
 ## Comparison with Other Approaches
 
