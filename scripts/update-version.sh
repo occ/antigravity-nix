@@ -32,7 +32,8 @@ get_latest_version() {
         # Check if playwright is available
         if node -e "require('playwright-chromium')" 2>/dev/null; then
             local version
-            version=$(node "$(dirname "$0")/scrape-version.js" 2>&1 | tail -1)
+            # Scraper outputs version to stdout, logs to stderr - capture only stdout
+            version=$(CHROME_BIN=${CHROME_BIN:-/run/current-system/sw/bin/google-chrome-stable} node "$(dirname "$0")/scrape-version.js")
 
             if [[ -n "$version" ]] && [[ "$version" =~ ^[0-9.]+-[0-9]+$ ]]; then
                 echo "$version"

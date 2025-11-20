@@ -19,6 +19,8 @@ jobs:
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
+        env:
+          DISABLE_FLAKEHUB: "true"
         with:
           flakehub: false
           extra-conf: |

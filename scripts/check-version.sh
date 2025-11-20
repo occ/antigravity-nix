@@ -17,7 +17,7 @@ echo -e "${GREEN}Current version:${NC} $CURRENT"
 echo "Fetching latest version from antigravity.google..."
 if command -v node &>/dev/null && [[ -f "scripts/scrape-version.js" ]]; then
     if node -e "require('playwright-chromium')" 2>/dev/null; then
-        LATEST=$(node scripts/scrape-version.js 2>&1 | tail -1)
+        LATEST=$(CHROME_BIN=${CHROME_BIN:-/run/current-system/sw/bin/google-chrome-stable} node scripts/scrape-version.js)
         if [[ -n "$LATEST" ]] && [[ "$LATEST" =~ ^[0-9.]+-[0-9]+$ ]]; then
             echo -e "${GREEN}Latest version:${NC}  $LATEST"
             

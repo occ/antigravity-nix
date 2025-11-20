@@ -36,7 +36,6 @@
             jq
             gh
             nodejs_20
-            nodePackages.playwright-chromium
           ];
 
           shellHook = ''
@@ -44,18 +43,17 @@
             echo "Available commands:"
             echo "  ./scripts/check-version.sh  - Check current vs latest version"
             echo "  ./scripts/update-version.sh - Update to latest version"
-
-            # Ensure playwright browsers are installed
-            if ! npx playwright-chromium --version &>/dev/null; then
-              echo "Installing Playwright browsers..."
-              npx playwright install chromium
-            fi
+            echo ""
+            echo "First time setup:"
+            echo "  npm install  - Install playwright-chromium locally"
+            echo ""
+            echo "Note: Requires google-chrome-stable to be installed system-wide for browser automation"
           '';
         };
       }
     ) // {
       # Version information for auto-update
-      version = "1.11.2-6251250307170304";
+      version = "1.11.3-6583016683339776";
 
       # Overlay for easy integration into NixOS configurations
       overlays.default = final: prev: {

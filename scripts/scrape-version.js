@@ -7,23 +7,28 @@
 const { chromium } = require('playwright-chromium');
 
 async function scrapeVersion() {
-  console.log('[INFO] Launching browser...');
+  console.error('[INFO] Launching browser...');
+
+  // On NixOS, use system Chrome if available
+  const chromePath = process.env.CHROME_BIN ||
+                     process.env.CHROME_PATH ||
+                     '/run/current-system/sw/bin/google-chrome-stable';
 
   const browser = await chromium.launch({
     headless: true,
-    executablePath: process.env.CHROME_BIN || process.env.CHROME_PATH,
+    executablePath: chromePath,
   });
 
   try {
     const page = await browser.newPage();
 
-    console.log('[INFO] Navigating to Antigravity download page...');
+    console.error('[INFO] Navigating to Antigravity download page...');
     await page.goto('https://antigravity.google/download/linux', {
       waitUntil: 'networkidle',
       timeout: 30000,
     });
 
-    console.log('[INFO] Waiting for page to render...');
+    console.error('[INFO] Waiting for page to render...');
     await page.waitForTimeout(3000); // Give JavaScript time to render
 
     // Try multiple strategies to extract version
@@ -53,8 +58,8 @@ async function scrapeVersion() {
     });
 
     if (version) {
-      console.log(`[SUCCESS] Found version: ${version}`);
-      console.log(version); // Output for script consumption
+      console.error(`[SUCCESS] Found version: ${version}`);
+      console.log(version); // Output ONLY version to stdout for script consumption
       return version;
     } else {
       console.error('[ERROR] Could not extract version from page');

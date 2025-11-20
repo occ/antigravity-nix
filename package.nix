@@ -33,11 +33,11 @@
 
 let
   pname = "google-antigravity";
-  version = "1.11.2-6251250307170304";
+  version = "1.11.3-6583016683339776";
 
   src = fetchurl {
     url = "https://edgedl.me.gvt1.com/edgedl/release2/j0qc3/antigravity/stable/${version}/linux-x64/Antigravity.tar.gz";
-    sha256 = "sha256-0bERWudsJ1w3bqZg4eTS3CDrPnLWogawllBblEpfZLc=";
+    sha256 = "sha256-Al2lEvl5mnFU4sx1vAkIIBOCwazy6DePnaI1y4SlYVs=";
   };
 
   # Create a Chrome wrapper that uses the user's existing profile
