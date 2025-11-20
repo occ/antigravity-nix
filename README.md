@@ -1,67 +1,31 @@
 # antigravity-nix
 
-> Auto-updating Nix Flake for [Google Antigravity](https://antigravity.google) - The AI-Native IDE for Autonomous Development
+Auto-updating Nix Flake packaging for Google Antigravity.
 
 [![Update Antigravity](https://github.com/jacopone/antigravity-nix/actions/workflows/update.yml/badge.svg)](https://github.com/jacopone/antigravity-nix/actions/workflows/update.yml)
 [![Flake Check](https://img.shields.io/badge/flake-check%20passing-success)](https://github.com/jacopone/antigravity-nix)
 [![NixOS](https://img.shields.io/badge/NixOS-ready-blue?logo=nixos)](https://nixos.org)
 
-## ✨ Features
+## Overview
 
-- 🧠 **True AI Agents**: Multi-file reasoning, architectural planning, and autonomous execution
-- 🚀 **Smart Auto-Updates**: Browser-based version detection with zero manual intervention
-- 🎯 **NixOS Optimized**: FHS environment with system Chrome integration
-- 📦 **Multi-Platform**: Linux (x86_64, aarch64) and macOS (x86_64, aarch64)
-- ⚡ **Lightning Fast**: New versions within 48 hours, auto-merge when tests pass
-- 🔐 **Production Ready**: Automated hash verification and comprehensive build testing
-- 🎨 **Seamless Integration**: First-class NixOS and Home Manager support with overlays
+This flake provides Google Antigravity for NixOS systems with:
 
-## 🎯 Antigravity vs Traditional AI IDEs
-
-Google Antigravity represents a paradigm shift from AI **assistants** to AI **agents**. While tools like Cursor provide intelligent code completion and chat interfaces, Antigravity operates as an autonomous development partner:
-
-### **Antigravity (Agentic)**
-- 🧠 **Autonomous Reasoning**: Agents independently analyze codebases, plan multi-step changes, and execute complex refactorings
-- 🏗️ **Architectural Intelligence**: Understands system design, makes holistic decisions across modules
-- 🔄 **Self-Directed Execution**: Can implement entire features from natural language specifications
-- 🐛 **Intelligent Debugging**: Analyzes logs, traces, and system behavior to root-cause issues
-- 📚 **Adaptive Learning**: Learns your team's patterns, conventions, and architectural preferences
-- 🎯 **Goal-Oriented**: Given high-level objectives, breaks them into tasks and executes autonomously
-
-### **Traditional AI IDEs (Assistant-Based)**
-- 💬 Chat-based code suggestions and explanations
-- ⌨️ Context-aware autocomplete and inline generation
-- 🔍 File-by-file code understanding
-- ❓ Requires explicit prompts and guidance for each step
-- 📝 Primarily focused on writing code snippets
-
-**Think of it this way**: Traditional AI IDEs are like a smart autocomplete that can write functions. Antigravity is like having a senior developer who can architect, implement, and debug entire features while you focus on product direction.
-
-### The NixOS Challenge
-
-Running binary-distributed IDEs like Antigravity on NixOS can be challenging due to:
-- Non-standard filesystem layout breaking hardcoded paths
-- Missing system libraries that aren't in the Nix store
-- Complex runtime dependencies that require manual patching
-
-### Our Solution
-
-This flake uses **FHS Environment** (`buildFHSEnv`) to provide Antigravity with a standard Linux filesystem layout within an isolated container. This means:
-
-- ✅ **Zero configuration** - Works out of the box on NixOS
-- ✅ **All dependencies included** - No manual library hunting
-- ✅ **Maintains purity** - Isolated from the rest of your system
-- ✅ **Automatic updates** - Stay current with Google's latest releases
+- **Automated updates**: Browser-based version detection with 3x weekly checks
+- **FHS environment**: Standard Linux filesystem layout via `buildFHSEnv`
+- **Multi-platform support**: Linux (x86_64, aarch64) and macOS (x86_64, aarch64)
+- **Chrome integration**: Bundled wrapper for system Chrome with user profile support
+- **Version pinning**: Tagged releases for reproducible builds
+- **Zero configuration**: All dependencies included
 
 ## Installation
 
-### Try without installing
+### Quick Start
 
 ```bash
 nix run github:jacopone/antigravity-nix
 ```
 
-### NixOS (Flakes)
+### NixOS Configuration
 
 Add to your `flake.nix`:
 
@@ -134,7 +98,7 @@ Add to your `flake.nix`:
 
 ## Usage
 
-After installation, launch Antigravity from your application menu or run:
+Launch from application menu or command line:
 
 ```bash
 antigravity
@@ -148,11 +112,9 @@ antigravity /path/to/project
 
 ## Version Management
 
-This flake automatically tracks the latest stable version of Google Antigravity.
+### Pinning Versions
 
-### Using Releases
-
-We provide tagged releases for version stability:
+Use tagged releases for stability:
 
 ```nix
 # Latest release (recommended)
@@ -166,65 +128,55 @@ View all releases: https://github.com/jacopone/antigravity-nix/releases
 
 ### Updating
 
-To manually update your flake:
-
 ```bash
-# Update the flake lock
+# Update flake lock
 nix flake update antigravity-nix
 
-# Rebuild your system
+# Rebuild system
 sudo nixos-rebuild switch --flake .
 ```
 
-## 🔧 How It Works
+## Implementation Details
 
-This flake implements a sophisticated auto-update system with browser automation:
+### Packaging Approach
 
-1. **🕐 3x Weekly Checks**: GitHub Actions runs Monday, Wednesday, Friday at 9:00 UTC
-2. **🌐 Smart Version Detection**:
-   - Uses Playwright with system Chrome for JavaScript-rendered page scraping
-   - NixOS-optimized with automatic Chrome path detection (`/run/current-system/sw/bin/google-chrome-stable`)
-   - Separates logs (stderr) from version output (stdout) for clean parsing
-3. **🔒 Cryptographic Verification**: Downloads and verifies SHA256 hashes for all platforms
-4. **✅ Automated Testing**: Builds package and runs comprehensive flake checks
-5. **🔄 Intelligent PR Management**: Creates PRs with detailed changelogs, auto-merges when tests pass
-6. **🏷️ Release Tagging**: Automatically creates GitHub releases for version pinning
-7. **🐚 FHS Isolation**: Provides standard Linux environment within Nix's purity model
-8. **🔗 Chrome Integration**: Bundles Chrome wrapper for Antigravity's browser automation features
+Antigravity is distributed as a binary that expects a standard Linux filesystem layout. NixOS uses a non-standard structure (`/nix/store`), requiring special handling:
 
-### Recent Improvements
+1. **antigravity-unwrapped**: Extracts upstream tarball without modification
+2. **FHS Environment**: Wraps binary in isolated container with standard paths and all required libraries
 
-**✨ November 2025 Update**: Complete rewrite of version detection system
-- **Fixed browser scraping** to properly separate logs from version output
-- **Added NixOS system Chrome integration** with automatic path detection
-- **Improved error handling** and workflow reliability
-- **Added comprehensive documentation** (CLAUDE.md) for contributors
-- **Zero false positives** on version checks
-- **Enhanced automation** with npm-based Playwright dependency management
+### Auto-Update System
 
-## Comparison with Other Approaches
+The flake implements automated version tracking:
 
-| Method | Update Speed | FHS Support | Reliability | Platforms |
-|--------|-------------|-------------|-------------|-----------|
-| **antigravity-nix** | 3x weekly | ✅ Built-in | Automated testing | Linux, macOS |
-| Manual binary | Immediate | ❌ Manual setup | Self-managed | Linux only |
-| Custom derivation | Varies | ❌ Complex patching | Community | Linux, macOS |
+1. **Scheduled checks**: GitHub Actions runs Monday, Wednesday, Friday at 9:00 UTC
+2. **Browser automation**: Playwright scrapes version from JavaScript-rendered download page
+3. **Hash verification**: Downloads and verifies SHA256 hashes for all platforms
+4. **Build testing**: Validates package builds successfully before creating PR
+5. **Auto-merge**: Merges PR when tests pass
+6. **Release tagging**: Creates GitHub releases for version pinning
+
+### Chrome Integration
+
+Creates a Chrome wrapper that:
+- Forces use of user's Chrome profile (`~/.config/google-chrome`)
+- Preserves installed extensions
+- Sets `CHROME_BIN` and `CHROME_PATH` environment variables
 
 ## Requirements
 
-- NixOS or Nix package manager
-- Nix Flakes enabled
-- `allowUnfree = true` in your Nix configuration (Antigravity is proprietary software)
+- NixOS or Nix package manager with flakes enabled
+- `allowUnfree = true` in Nix configuration (Antigravity is proprietary software)
 
 ### Enabling Unfree Packages
 
-Add to your `configuration.nix`:
+**NixOS Configuration** (`configuration.nix`):
 
 ```nix
 nixpkgs.config.allowUnfree = true;
 ```
 
-Or for Nix flakes, add to your `flake.nix`:
+**Flakes** (`flake.nix`):
 
 ```nix
 nixpkgs = import inputs.nixpkgs {
@@ -235,52 +187,33 @@ nixpkgs = import inputs.nixpkgs {
 
 ## Troubleshooting
 
-### Antigravity won't start
+### Hash Mismatch Error
 
-**Problem**: Application fails to launch or shows permission errors
-
-**Solution**: Ensure unfree packages are enabled:
-
-```bash
-nix-instantiate --eval -E '(import <nixpkgs> {}).config.allowUnfree'
-```
-
-Should return `true`. If not, add `nixpkgs.config.allowUnfree = true;` to your configuration.
-
-### Build fails with hash mismatch
-
-**Problem**: `hash mismatch` error during build
-
-**Solution**: The upstream binary may have changed. Update with:
+Upstream binary changed. Update with:
 
 ```bash
 ./scripts/update-version.sh
 ```
 
-Or wait for the next automatic update (runs 3x weekly).
+Or wait for automatic update (runs 3x weekly).
 
-### Missing libraries error
+### Application Won't Start
 
-**Problem**: Error messages about missing `.so` files
+Verify unfree packages are enabled:
 
-**Solution**: The FHS environment should provide all necessary libraries. If you still encounter issues:
+```bash
+nix-instantiate --eval -E '(import <nixpkgs> {}).config.allowUnfree'
+```
 
-1. Check your NixOS version: `nixos-version`
-2. Try rebuilding: `nix build .#default --rebuild`
-3. Open an issue with:
-   - Full error message
-   - Output of `antigravity --version` (if it partially works)
-   - Your system architecture
+Should return `true`.
 
-### Application crashes or freezes
+### Missing Libraries
 
-**Problem**: Antigravity crashes during operation
+The FHS environment provides all necessary libraries. If issues persist:
 
-**Solution**:
-1. Check system resources (RAM, disk space)
-2. Look for relevant logs in `~/.config/antigravity/logs/`
-3. Try removing cache: `rm -rf ~/.cache/antigravity/`
-4. Report to [Google Antigravity support](https://antigravity.google/support)
+1. Check NixOS version: `nixos-version`
+2. Rebuild: `nix build .#default --rebuild`
+3. Open issue with error details and system architecture
 
 ## Project Structure
 
@@ -289,49 +222,36 @@ antigravity-nix/
 ├── flake.nix              # Main flake configuration with overlay
 ├── package.nix            # Package derivation with FHS environment
 ├── scripts/
-│   └── update-version.sh  # Auto-update script
-├── .github/
-│   └── workflows/
-│       ├── update.yml     # Auto-update workflow (3x weekly)
-│       ├── release.yml    # Automatic release tagging
-│       └── cleanup-branches.yml  # Branch cleanup automation
-└── README.md
+│   ├── scrape-version.js  # Playwright-based version scraper
+│   ├── check-version.sh   # Quick version comparison
+│   └── update-version.sh  # Full update process
+└── .github/
+    └── workflows/
+        ├── update.yml     # Auto-update workflow (3x weekly)
+        ├── release.yml    # Automatic release tagging
+        └── cleanup-branches.yml  # Branch cleanup
 ```
 
 ## Contributing
 
-Contributions are welcome! Please:
+Contributions welcome. Please:
 
-1. Fork the repository
-2. Create a feature branch
-3. Test your changes with `nix build`
-4. Submit a pull request
-
-Areas where contributions are especially appreciated:
-- Additional platform support
-- Build optimization
-- Documentation improvements
-- Bug reports and fixes
+1. Fork repository
+2. Create feature branch
+3. Test with `nix build` and `nix flake check`
+4. Submit pull request
 
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
 
-Google Antigravity itself is proprietary software by Google LLC.
-
-## Maintainers
-
-- [@jacopone](https://github.com/jacopone)
+Google Antigravity is proprietary software by Google LLC.
 
 ## Related Projects
 
-- [code-cursor-nix](https://github.com/jacopone/code-cursor-nix) - Auto-updating Cursor AI editor with browser automation
+- [code-cursor-nix](https://github.com/jacopone/code-cursor-nix) - Auto-updating Cursor AI editor
 - [claude-code-nix](https://github.com/sadjow/claude-code-nix) - Auto-updating Claude Code CLI
 - [nixpkgs](https://github.com/NixOS/nixpkgs) - Official Nix packages collection
-
-## Inspired By
-
-This project follows the auto-updating patterns established by [code-cursor-nix](https://github.com/jacopone/code-cursor-nix) and [claude-code-nix](https://github.com/sadjow/claude-code-nix), providing the same seamless experience for Google Antigravity users on NixOS.
 
 ## Disclaimer
 
