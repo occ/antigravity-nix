@@ -124,7 +124,10 @@ main() {
 
     # Get latest version
     local latest_version
-    latest_version=$(get_latest_version)
+    if ! latest_version=$(get_latest_version); then
+        log_warn "Could not fetch latest version. Keeping current version."
+        exit 0
+    fi
     log_info "Latest version: $latest_version"
 
     # Check if update is needed
