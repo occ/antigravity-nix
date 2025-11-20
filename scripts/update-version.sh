@@ -25,7 +25,29 @@ log_error() {
 get_latest_version() {
     log_info "Fetching latest version from antigravity.google..."
 
-    # Fetch the download page
+    # Try browser scraping if Node.js and scraping script are available
+    if command -v node &>/dev/null && [[ -f "$(dirname "$0")/scrape-version.js" ]]; then
+        log_info "Using browser scraping (JavaScript-rendered page detected)"
+
+        # Check if playwright is available
+        if node -e "require('playwright-chromium')" 2>/dev/null; then
+            local version
+            version=$(node "$(dirname "$0")/scrape-version.js" 2>&1 | tail -1)
+
+            if [[ -n "$version" ]] && [[ "$version" =~ ^[0-9.]+-[0-9]+$ ]]; then
+                echo "$version"
+                return 0
+            else
+                log_warn "Browser scraping failed, falling back to curl"
+            fi
+        else
+            log_warn "Playwright not available, falling back to curl"
+        fi
+    fi
+
+    # Fallback: Try curl (will likely fail for JavaScript-rendered pages)
+    log_info "Attempting curl scraping..."
+
     local download_page
     download_page=$(curl -sL --compressed "https://antigravity.google/download/linux" 2>/dev/null || echo "")
 
@@ -43,7 +65,7 @@ get_latest_version() {
 
     if [[ -z "$version" ]]; then
         log_error "Could not extract version from download page"
-        log_warn "Page format may have changed. Manual investigation needed."
+        log_warn "Page format may have changed. Consider using browser scraping."
         return 1
     fi
 
